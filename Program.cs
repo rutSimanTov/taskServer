@@ -61,6 +61,7 @@ app.UseAuthentication(); //אימות מי המשתמש
 app.UseAuthorization(); //מה המשתמש יכול לעשות  
 
 //------item----
+app.MapGet("/",()=>"tasksServer api is running ");
 
 app.MapGet("/item", async (ToDoDbContext db) =>
 {
