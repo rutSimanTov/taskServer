@@ -65,7 +65,7 @@
                 "dockerfile": "${workspaceFolder}/Dockerfile",
                 "context": "${workspaceFolder}",
                 "platform": {
-                    "os": "windows",
+                    "os": "linux",
                     "architecture": "amd64"
                 },
                 "pull": true
@@ -80,9 +80,7 @@
             "dependsOn": [
                 "docker-build: debug"
             ],
-            "dockerRun": {
-                "os": "Windows"
-            },
+            "dockerRun": {},
             "netCore": {
                 "appProject": "${workspaceFolder}/ToDoApi.csproj",
                 "enableDebugging": true
@@ -94,9 +92,7 @@
             "dependsOn": [
                 "docker-build: release"
             ],
-            "dockerRun": {
-                "os": "Windows"
-            },
+            "dockerRun": {},
             "netCore": {
                 "appProject": "${workspaceFolder}/ToDoApi.csproj"
             }
