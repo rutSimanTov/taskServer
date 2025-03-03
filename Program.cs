@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
+
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
