@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 
 //mysql
 builder.Services.AddDbContext<ToDoDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"),
+    options.UseMySql(builder.Configuration.GetConnectionString("ToDoListDB"),
     new MySqlServerVersion(new Version(8, 0, 40))));
 
 
