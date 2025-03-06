@@ -17,23 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
 
 
-// builder.Services.AddCors(options =>
-// {
-//     options.AddDefaultPolicy(builder =>
-//     {
-//         builder.AllowAnyOrigin()
-//         .AllowAnyMethod()
-//         .AllowAnyHeader();
-//     });
-// });
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", builder =>
+    options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins("https://taskclient-7oyd.onrender.com") // הדומיין של הלקוח
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+          builder.WithOrigins("https://taskclient-7oyd.onrender.com")
+        .WithMethods("GET","POST" ,"PUT" ,"DELETE") 
+             .WithHeaders("Content-Type","Authorization");
     });
 });
 
