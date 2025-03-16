@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
 //
+logger.LogDebug($"Connection String: {connectionString}");
 if (string.IsNullOrEmpty(connectionString))
 
 {
