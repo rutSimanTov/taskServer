@@ -15,8 +15,15 @@ using Microsoft.AspNetCore.Http.HttpResults;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
+//
+if (string.IsNullOrEmpty(connectionString))
 
+{
 
+throw new Exception("Connection string is not set in the environment variables.");
+
+}
+//
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
