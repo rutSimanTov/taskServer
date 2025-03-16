@@ -88,7 +88,7 @@ app.UseCors();
 app.UseAuthentication(); //אימות מי המשתמש
 app.UseAuthorization(); //מה המשתמש יכול לעשות  
 
-//------item----
+//------Item----
 app.MapGet("/",()=>"tasksServer api is running ");
 
 app.MapGet("/item", async (ToDoDbContext db) =>
@@ -97,7 +97,7 @@ app.MapGet("/item", async (ToDoDbContext db) =>
 });
 
 
-app.MapPost("/item/{name}", async (ToDoDbContext db, string name) =>
+app.MapPost("/Item/{name}", async (ToDoDbContext db, string name) =>
  {
      var newItem = new Item
      {
@@ -110,22 +110,22 @@ app.MapPost("/item/{name}", async (ToDoDbContext db, string name) =>
  }).RequireAuthorization();
 
 
-app.MapPut("/item/{id}/{isComplete}", async (ToDoDbContext db, int id, bool isComplete) =>
+app.MapPut("/Item/{id}/{isComplete}", async (ToDoDbContext db, int id, bool isComplete) =>
 {
-    var item = await db.Items.FindAsync(id);
-    if (item == null)
+    var Item = await db.Items.FindAsync(id);
+    if (Item == null)
         return Results.NotFound();
-    item.IsComplete = isComplete;
+    Item.IsComplete = isComplete;
     await db.SaveChangesAsync();
     return Results.NoContent();
 }).RequireAuthorization();
 
-app.MapDelete("/item/{id}", async (ToDoDbContext db, int id) =>
+app.MapDelete("/Item/{id}", async (ToDoDbContext db, int id) =>
 {
-    var item = await db.Items.FindAsync(id);
-    if (item == null)
+    var Item = await db.Items.FindAsync(id);
+    if (Item == null)
         return Results.NotFound();
-    db.Remove(item);
+    db.Remove(Item);
     await db.SaveChangesAsync();
     return Results.Ok();
 }).RequireAuthorization();
