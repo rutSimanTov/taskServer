@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging; 
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -14,7 +15,19 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//---
+builder.Services.AddLogging();
+
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>(); 
+
+//---
+
+
+
 var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
+
+
+
 //
 logger.LogDebug($"Connection String: {connectionString}");
 if (string.IsNullOrEmpty(connectionString))
