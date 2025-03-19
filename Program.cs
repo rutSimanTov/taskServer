@@ -34,7 +34,8 @@ builder.Services.AddCors(options =>
 // MySQL connection string from environment variable
 
 builder.Services.AddDbContext<ToDoDbContext>(options =>
-    options.UseMySql(Environment.GetEnvironmentVariable("ConnectionStrings__ToDoListDB"),
+    options.UseMySql(builder.Configuration.GetConnectionString("ToDoListDB") ?? 
+                     Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB"),
     new MySqlServerVersion(new Version(8, 0, 40))));
 
 // Authentication and authorization setup
