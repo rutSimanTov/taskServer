@@ -18,8 +18,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
+//Configure CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -32,11 +31,11 @@ builder.Services.AddCors(options =>
 
 
 // MySQL connection string from environment variable
-
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("ToDoListDB") ?? 
                      Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB"),
     new MySqlServerVersion(new Version(8, 0, 40))));
+
 
 // Authentication and authorization setup
 builder.Services.AddAuthentication(options =>
@@ -57,25 +56,26 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
     };
 });
+
 //Authorization
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.UseRouting();
 app.UseCors();
+app.UseAuthentication(); //User authentication middleware
+app.UseAuthorization(); //User authorization middleware
 
-app.UseAuthentication(); //אימות מי המשתמש
-app.UseAuthorization(); //מה המשתמש יכול לעשות  
-
-//------Item----
+//Endpoint to check if the API is running
 app.MapGet("/",()=>"tasksServer api is running ");
 
+//Endpoint to retrieve all items
 app.MapGet("/item", async (ToDoDbContext db) =>
 {
     return await db.Items.ToListAsync();
 });
 
-
+//Endpoint to create a new item
 app.MapPost("/Item/{name}", async (ToDoDbContext db, string name) =>
  {
      var newItem = new Item
@@ -88,7 +88,7 @@ app.MapPost("/Item/{name}", async (ToDoDbContext db, string name) =>
      return Results.Created($"/ {newItem.Id}", newItem);
  }).RequireAuthorization();
 
-
+//Endpoint to update an existing item
 app.MapPut("/Item/{id}/{isComplete}", async (ToDoDbContext db, int id, bool isComplete) =>
 {
     var Item = await db.Items.FindAsync(id);
@@ -99,6 +99,7 @@ app.MapPut("/Item/{id}/{isComplete}", async (ToDoDbContext db, int id, bool isCo
     return Results.NoContent();
 }).RequireAuthorization();
 
+//Endpoint to delete an item
 app.MapDelete("/Item/{id}", async (ToDoDbContext db, int id) =>
 {
     var Item = await db.Items.FindAsync(id);
@@ -109,8 +110,7 @@ app.MapDelete("/Item/{id}", async (ToDoDbContext db, int id) =>
     return Results.Ok();
 }).RequireAuthorization();
 
-//------user-----
-
+//Endpoint to register a new user
 app.MapPost("/register", async (ToDoDbContext db, [FromBody] User user) =>
 {
     if (await db.Users.AnyAsync(u => u.Name == user.Name))
@@ -127,9 +127,9 @@ app.MapPost("/register", async (ToDoDbContext db, [FromBody] User user) =>
     await db.SaveChangesAsync();
     var jwt = CreateJWT(newUser, builder.Configuration);
     return Results.Ok(jwt);
-
 });
 
+//Endpoint to login a user
 app.MapPost("/login", async (ToDoDbContext db, [FromBody] User user) =>
 {
     var loginUser = await db.Users.FirstOrDefaultAsync(u => u.Name == user.Name);
@@ -144,18 +144,13 @@ app.MapPost("/login", async (ToDoDbContext db, [FromBody] User user) =>
     }
 });
 
+//Method to create a JWT for authenticated users
 static object CreateJWT(User user, IConfiguration configuration)
-
 {
-
     var claims = new List<Claim>()
-
 {
-
 new Claim("id", user.Id.ToString()),
-
 new Claim("name", user.Name)
-
 };
 
 
