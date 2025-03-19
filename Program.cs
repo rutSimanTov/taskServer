@@ -13,15 +13,10 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
 using ToDoApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-
-// var connectionString = Environment.GetEnvironmentVariable("");
 
 
 
