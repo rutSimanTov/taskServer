@@ -15,29 +15,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//---
-builder.Services.AddLogging();
 
-var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>(); 
 
-//---
+// var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
 
 
 
-var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
-
-
-
-//
-logger.LogDebug($"Connection String: {connectionString}");
-if (string.IsNullOrEmpty(connectionString))
-
-{
-
-throw new Exception("Connection string is not set in the environment variables.");
-
-}
-//
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -55,7 +38,7 @@ builder.Services.AddCors(options =>
 
 //mysql
 builder.Services.AddDbContext<ToDoDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString(connectionString),//"ToDoListDB"
+    options.UseMySql(builder.Configuration.GetConnectionString("ToDoListDB"),
     new MySqlServerVersion(new Version(8, 0, 40))));
 
 
