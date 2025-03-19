@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging; 
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-// var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_TODOLISTDB");
+// var connectionString = Environment.GetEnvironmentVariable("");
 
 
 
@@ -33,13 +37,14 @@ builder.Services.AddCors(options =>
 
 
 
-//mysql
+// MySQL connection string from environment variable
 builder.Services.AddDbContext<ToDoDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("ToDoListDB"),
+    options.UseMySql(builder.Configuration.GetConnectionString("ToDoListDB") ?? 
+                     Environment.GetEnvironmentVariable("ConnectionStrings__ToDoListDB"),
     new MySqlServerVersion(new Version(8, 0, 40))));
 
 
-
+// Authentication and authorization setup
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,7 +63,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
     };
 });
-//הרשאות
+//Authorization
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
