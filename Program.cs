@@ -25,9 +25,6 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        //   builder.WithOrigins("https://taskclient-7oyd.onrender.com")
-        // .WithMethods("GET","POST" ,"PUT" ,"DELETE")  
-        // .AllowAnyHeader();
          builder.AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader();
