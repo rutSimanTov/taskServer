@@ -1,176 +1,159 @@
-# Task Management Server
 
-This repository contains the server-side implementation of a **Task Management System** built using **ASP.NET Core** and **C#**. The application provides a minimal API for managing tasks, user authentication via **JWT (JSON Web Tokens)**, and interaction with a **MySQL** database.
 
-The server interacts with the client-side application and is deployed on **Render** and **Calver Cloud** for hosting, with Docker integration for easy deployment.
+# Task Management API Server
 
-## Features
+This repository contains the server-side implementation of a Task Management System. The backend is built using C# with .NET Core and MySQL for the database, providing a minimal API with JWT authentication for secure access.
 
-* **User Authentication**: Users can register, login, and securely interact with the system using JWT tokens.
-* **Task Management**: Authenticated users can add, delete, update, and mark tasks as complete.
-* **Public Task Viewing**: All users can view the list of tasks without needing to authenticate.
-* **RESTful API**: Simple and effective API endpoints for interacting with tasks and users.
-* **Docker Integration**: The backend is containerized using Docker for seamless deployment.
+## Features 🌟
 
-## Technology Stack
+* **Task Management:** Users can create, update, delete, and mark tasks as completed.
+* **Authentication & Authorization:** Users must authenticate to manage tasks. JWT (JSON Web Tokens) is used to securely handle user authentication.
+* **Role-based Access:** Only authenticated users can add or delete tasks.
+* **API Endpoints:** Exposes RESTful API endpoints for task management operations.
 
-* **Backend**: ASP.NET Core (C#)
-* **Database**: MySQL (hosted on Calver Cloud)
-* **Authentication**: JWT (JSON Web Token)
-* **Containerization**: Docker
-* **Hosting**: Render (for production deployment)
-* **API Documentation**: Swagger for API exploration and testing.
+## Technology Stack 💻
 
-## Setup & Installation
+* **Backend Framework:** .NET Core 8.0 (C#)
+* **Database:** MySQL (Hosted on CalibreCloud)
+* **Authentication:** JWT (JSON Web Token)
+* **Containerization:** Docker for deploying the server in a containerized environment.
+* **API Documentation:** Swagger (for visualizing and testing the API endpoints)
 
-Follow these steps to get the server-side of the project up and running locally:
+## How It Works 🔧
+
+1. **User Registration:** A new user can register via the `/register` endpoint, where their data is stored in the database.
+2. **User Login:** Registered users can log in using the `/login` endpoint, receiving a JWT token for authentication.
+3. **Task Management:** Authenticated users can manage tasks (add, delete, update, mark as complete) via the `/Item` endpoint.
+4. **JWT Authentication:** All endpoints that require user authentication validate the JWT token passed by the client.
+
+## API Endpoints 📡
+
+### 1. **User Registration**
+
+* **POST** `/register`
+* Request Body:
+
+  ```json
+  {
+    "name": "username",
+    "password": "password123"
+  }
+  ```
+* Description: Registers a new user and returns a JWT token for authentication.
+
+### 2. **User Login**
+
+* **POST** `/login`
+* Request Body:
+
+  ```json
+  {
+    "name": "username",
+    "password": "password123"
+  }
+  ```
+* Description: Authenticates the user and returns a JWT token.
+
+### 3. **Get All Tasks**
+
+* **GET** `/item`
+* Description: Fetches all tasks in the system. Accessible to all users.
+
+### 4. **Create a New Task**
+
+* **POST** `/Item/{name}`
+* Description: Creates a new task. Requires JWT token for authentication.
+* Example Request:
+
+  ```json
+  {
+    "name": "Buy groceries"
+  }
+  ```
+
+### 5. **Update Task Status**
+
+* **PUT** `/Item/{id}/{isComplete}`
+* Description: Marks a task as completed or not completed. Requires JWT token for authentication.
+
+### 6. **Delete a Task**
+
+* **DELETE** `/Item/{id}`
+* Description: Deletes a specific task by ID. Requires JWT token for authentication.
+
+## Setup and Installation 🚀
 
 ### Prerequisites
 
-* **.NET 8.0 SDK** (or higher)
-* **Docker** (for containerization)
-* **MySQL** (for database management)
+* **Docker** for containerization.
+* **MySQL** database for storing user and task data.
 
-### Installation Steps
+### 1. Clone the repository:
 
-1. **Clone the repository**:
+```bash
+git clone https://github.com/YourUsername/TaskServer.git
+cd TaskServer
+```
 
-   ```bash
-   git clone https://github.com/yourusername/TaskServer.git
-   cd TaskServer
-   ```
+### 2. Set up the database:
 
-2. **Configure your MySQL Database**:
-
-   * Set up a MySQL database on your local machine or use a cloud-hosted MySQL instance.
-   * Update your `appsettings.json` or environment variables with the correct connection string for MySQL.
-
-3. **Restore dependencies**:
-
-   ```bash
-   dotnet restore
-   ```
-
-4. **Run the application locally**:
-
-   ```bash
-   dotnet run
-   ```
-
-   The application will be available at `https://localhost:5001`.
-
-### Docker Setup
-
-1. **Build the Docker image**:
-
-   ```bash
-   docker build -t taskserver .
-   ```
-
-2. **Run the Docker container**:
-
-   ```bash
-   docker run -p 5001:80 taskserver
-   ```
-
-   The API will be available at `http://localhost:5001`.
-
-## API Endpoints
-
-### 1. **GET /item**
-
-Retrieve a list of all tasks.
-
-**Response**: A list of task objects.
-
-### 2. **POST /item/{name}**
-
-Create a new task.
-
-**Parameters**:
-
-* `name`: The name of the task.
-
-**Response**: The created task object.
-
-### 3. **PUT /item/{id}/{isComplete}**
-
-Update the completion status of a task.
-
-**Parameters**:
-
-* `id`: The ID of the task to update.
-* `isComplete`: Boolean flag indicating whether the task is complete.
-
-**Response**: `204 No Content`.
-
-### 4. **DELETE /item/{id}**
-
-Delete a task.
-
-**Parameters**:
-
-* `id`: The ID of the task to delete.
-
-**Response**: `200 OK`.
-
-### 5. **POST /register**
-
-Register a new user.
-
-**Body**:
+Make sure your MySQL instance is running. Configure the connection string in the `appsettings.json` file.
 
 ```json
 {
-  "name": "username",
-  "password": "password"
+  "ConnectionStrings": {
+    "ToDoListDB": "Server=your_database_host;Database=ToDoList;User=your_user;Password=your_password;"
+  }
 }
 ```
 
-**Response**: A JWT token for the authenticated user.
+### 3. Build and run the Docker container:
 
-### 6. **POST /login**
-
-Login with an existing user.
-
-**Body**:
-
-```json
-{
-  "name": "username",
-  "password": "password"
-}
+```bash
+docker-compose build
+docker-compose up
 ```
 
-**Response**: A JWT token for the authenticated user.
+This will build the Docker image and start the server. The API will be available on `http://localhost:5001`.
 
-## Authentication
+### 4. Configure JWT settings:
 
-The system uses **JWT (JSON Web Tokens)** for user authentication. The token is required to interact with protected API endpoints (e.g., adding, updating, or deleting tasks).
-
-When registering or logging in, the server will return a JWT token that should be included in the `Authorization` header as a bearer token for any subsequent requests requiring authentication.
-
-## Configuration
-
-The JWT configuration values (e.g., `Issuer`, `Audience`, and `Key`) can be found in the `appsettings.json` file or be set via environment variables for deployment.
+In the `appsettings.json` file, update the JWT configurations with your own values:
 
 ```json
 "Jwt": {
-  "Issuer": "yourIssuer",
-  "Audience": "yourAudience",
-  "Key": "yourSecretKey"
+  "Issuer": "your_issuer",
+  "Audience": "your_audience",
+  "Key": "your_jwt_secret_key"
 }
 ```
 
-## Deployment
+## Docker Integration 🐳
 
-### Render Deployment
+This project includes a `Dockerfile` to containerize the application and ensure consistency across environments.
 
-This server-side application is deployed using **Render**. It is configured to run with **HTTPS** and **Docker** integration.
+To build and run the application in a Docker container, use the following commands:
 
-## Contributing
+* **Build Docker Image**:
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs or enhancements.
+  ```bash
+  docker build -t taskserver .
+  ```
 
+* **Run Docker Container**:
+
+  ```bash
+  docker run -p 5001:5001 taskserver
+  ```
+
+This will expose the server on port 5001. Ensure the MySQL database is connected and accessible to the application.
+
+## Backend Integration 🔗
+
+Ensure the frontend client is set up to interact with this API. The server provides a minimal REST API for task management and authentication. Use the provided JWT token from the `/login` or `/register` endpoint to authenticate requests.
+
+## Contributing 🤝
+
+Contributions are welcome! Feel free to submit a pull request or open an issue if you encounter any bugs or have feature requests.
 
 
