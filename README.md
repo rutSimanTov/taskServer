@@ -150,6 +150,8 @@ This will expose the server on port 5001. Ensure the MySQL database is connected
 
 ## Backend Integration 🔗
 The frontend of the project is available here:  [Task Client Repository](https://github.com/rutSimanTov/taskClient)
+
+
 Ensure the frontend client is set up to interact with this API. The server provides a minimal REST API for task management and authentication. Use the provided JWT token from the `/login` or `/register` endpoint to authenticate requests.
 
 ## Contributing 🤝
